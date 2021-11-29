@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace hex
@@ -44,22 +43,41 @@ namespace hex
 
         private void Triangulate(HexCell cell)
         {
-            var center = cell.transform.localPosition;
-            for (var i = 0; i < 6; i++) {
-                AddTriangle(
-                    center,
-                    center + HexMetrics.Corners[i],
-                    center + HexMetrics.Corners[i + 1]
-                );
-                AddTriangleColor(cell.color);
+            for (var d = HexDirection.NE; d <= HexDirection.NW; d++)
+            {
+                Triangulate(d, cell);
             }
         }
+
+        private void Triangulate(HexDirection direction, HexCell cell)
+        {
+            var center = cell.transform.localPosition;
+            AddTriangle(
+                center,
+                center + HexMetrics.GetFirstCorner(direction),
+                center + HexMetrics.GetSecondCorner(direction)
+            );
+            var prevNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
+            var neighbor = cell.GetNeighbor(direction) ?? cell;
+            var nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
+            AddTriangleColor(cell.color,
+                (cell.color + prevNeighbor.color + neighbor.color) / 3f,
+                (cell.color + nextNeighbor.color + neighbor.color) / 3f);
+        }
+
 
         private void AddTriangleColor(Color color)
         {
             _colors.Add(color);
             _colors.Add(color);
             _colors.Add(color);
+        }
+
+        private void AddTriangleColor(Color c1, Color c2, Color c3)
+        {
+            _colors.Add(c1);
+            _colors.Add(c2);
+            _colors.Add(c3);
         }
 
         private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
