@@ -52,17 +52,22 @@ namespace hex
         private void Triangulate(HexDirection direction, HexCell cell)
         {
             var center = cell.transform.localPosition;
-            AddTriangle(
-                center,
-                center + HexMetrics.GetFirstCorner(direction),
-                center + HexMetrics.GetSecondCorner(direction)
-            );
+            var v1 = center + HexMetrics.GetFirstSolidCorner(direction);
+            var v2 = center + HexMetrics.GetSecondSolidCorner(direction);
+
+            AddTriangle(center, v1, v2);
+            AddTriangleColor(cell.color);
+
+            var bridge = HexMetrics.GetBridge(direction);
+            var v3 = v1 + bridge;
+            var v4 = v2 + bridge;
+
+            AddQuad(v1, v2, v3, v4);
+            
             var prevNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
             var neighbor = cell.GetNeighbor(direction) ?? cell;
             var nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
-            AddTriangleColor(cell.color,
-                (cell.color + prevNeighbor.color + neighbor.color) / 3f,
-                (cell.color + nextNeighbor.color + neighbor.color) / 3f);
+            AddQuadColor(cell.color, (cell.color + neighbor.color) * 0.5f);
         }
 
 
@@ -89,6 +94,37 @@ namespace hex
             _triangles.Add(vertexIndex);
             _triangles.Add(vertexIndex + 1);
             _triangles.Add(vertexIndex + 2);
+        }
+
+        private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
+        {
+            var vertexIndex = _vertices.Count;
+            _vertices.Add(v1);
+            _vertices.Add(v2);
+            _vertices.Add(v3);
+            _vertices.Add(v4);
+            _triangles.Add(vertexIndex);
+            _triangles.Add(vertexIndex + 2);
+            _triangles.Add(vertexIndex + 1);
+            _triangles.Add(vertexIndex + 1);
+            _triangles.Add(vertexIndex + 2);
+            _triangles.Add(vertexIndex + 3);
+        }
+
+        private void AddQuadColor(Color c1, Color c2, Color c3, Color c4)
+        {
+            _colors.Add(c1);
+            _colors.Add(c2);
+            _colors.Add(c3);
+            _colors.Add(c4);
+        }
+        
+        private void AddQuadColor(Color c1, Color c2)
+        {
+            _colors.Add(c1);
+            _colors.Add(c1);
+            _colors.Add(c2);
+            _colors.Add(c2);
         }
     }
 }
