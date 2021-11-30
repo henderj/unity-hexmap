@@ -19,7 +19,7 @@
 
         public static HexDirection Next(this HexDirection direction)
         {
-            return direction == HexDirection.NW ? HexDirection.NE : direction + 1;
+            return direction == HexDirection.NW ? HexDirection.NE : (direction + 1);
         }
     }
 }

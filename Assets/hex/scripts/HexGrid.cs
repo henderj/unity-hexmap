@@ -67,7 +67,7 @@ namespace hex
                     cell.SetNeighbor(HexDirection.SE, _cells[i - width]);
                     if (x > 0)
                     {
-                        cell.SetNeighbor(HexDirection.SW, _cells[i - width + 1]);
+                        cell.SetNeighbor(HexDirection.SW, _cells[i - width - 1]);
                     }
                 }
                 else
