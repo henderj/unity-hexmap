@@ -8,6 +8,23 @@ namespace hex
         public HexCoordinates coordinates;
         public Color color;
 
+        public int Elevation
+        {
+            get
+            {
+                return elevation;
+            }
+            set
+            {
+                elevation = value;
+                var position = transform.localPosition;
+                position.y = value * HexMatrics.elevationStep;
+                transform.localPosition = position;
+            }
+        }
+
+        private int elevation;
+
         [SerializeField] private HexCell[] neighbors;
 
         public HexCell GetNeighbor(HexDirection direction)
@@ -17,8 +34,8 @@ namespace hex
 
         public void SetNeighbor(HexDirection direction, HexCell cell)
         {
-            neighbors[(int) direction] = cell;
-            cell.neighbors[(int) direction.Opposite()] = this;
+            neighbors[(int)direction] = cell;
+            cell.neighbors[(int)direction.Opposite()] = this;
         }
     }
 }

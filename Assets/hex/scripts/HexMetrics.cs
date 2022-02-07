@@ -10,6 +10,8 @@ namespace hex
         public const float SolidFactor = 0.75f;
         public const float BlendFactor = 1f - SolidFactor;
 
+        public const float elevationStep = 5f;
+
         private static readonly Vector3[] Corners =
         {
             new Vector3(0f, 0f, OuterRadius),
