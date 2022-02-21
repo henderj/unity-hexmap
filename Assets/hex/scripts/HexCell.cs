@@ -6,6 +6,7 @@ namespace hex
     public class HexCell : MonoBehaviour
     {
         public HexCoordinates coordinates;
+        public RectTransform uiRect;
         public Color color;
 
         public int Elevation
@@ -18,8 +19,12 @@ namespace hex
             {
                 elevation = value;
                 var position = transform.localPosition;
-                position.y = value * HexMatrics.elevationStep;
+                position.y = value * HexMetrics.elevationStep;
                 transform.localPosition = position;
+
+                var uiPosition = uiRect.localPosition;
+                uiPosition.z = elevation * -HexMetrics.elevationStep;
+                uiRect.localPosition = uiPosition;
             }
         }
 

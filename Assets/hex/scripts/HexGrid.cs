@@ -83,6 +83,8 @@ namespace hex
             var label = Instantiate<TMP_Text>(cellLabelPrefab, _gridCanvas.transform, false);
             label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
             label.SetText(cell.coordinates.ToStringOnSeparateLines());
+
+            cell.uiRect = label.rectTransform;
         }
 
 
