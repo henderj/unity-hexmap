@@ -42,5 +42,15 @@ namespace hex
             neighbors[(int)direction] = cell;
             cell.neighbors[(int)direction.Opposite()] = this;
         }
+
+        public HexEdgeType GetEdgeType(HexDirection direction)
+        {
+            return HexMetrics.GetEdgeType(elevation, neighbors[(int)direction].elevation);
+        }
+
+        public HexEdgeType GetEdgeType(HexCell otherCell)
+        {
+            return HexMetrics.GetEdgeType(elevation, otherCell.elevation);
+        }
     }
 }

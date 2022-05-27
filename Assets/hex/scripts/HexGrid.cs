@@ -22,6 +22,7 @@ namespace hex
         {
             _gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
+            _cells = new HexCell[width * height];
         }
 
         private void Start()
@@ -31,6 +32,13 @@ namespace hex
 
         private void OnEnable()
         {
+            foreach (var cell in _cells)
+            {
+                if (cell?.uiRect)
+                {
+                    Destroy(cell.uiRect.gameObject);
+                }
+            }
             _cells = new HexCell[width * height];
 
             for (int z = 0, i = 0; z < height; z++)
