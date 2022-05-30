@@ -157,6 +157,8 @@ namespace hex
                     TriangulateCornerTerraces(left, leftCell, right, rightCell, bottom, bottomCell);
                     return;
                 }
+                TriangulateCornerTerracesCliff(bottom, bottomCell, left, leftCell, right, rightCell);
+                return;
             }
             if (rightEdgeType == HexEdgeType.Slope)
             {
@@ -209,7 +211,47 @@ namespace hex
             Vector3 right, HexCell rightCell
         )
         {
+            float b = 1f / (rightCell.Elevation - beginCell.Elevation);
+            var boundary = Vector3.Lerp(begin, right, b);
+            Color boundaryColor = Color.Lerp(beginCell.color, rightCell.color, b);
 
+            TriangulateBoundaryTriangle(begin, beginCell, left, leftCell, boundary, boundaryColor);
+            if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope)
+            {
+                TriangulateBoundaryTriangle(left, leftCell, right, rightCell, boundary, boundaryColor);
+            }
+            else
+            {
+                AddTriangle(left, right, boundary);
+                AddTriangleColor(leftCell.color, rightCell.color, boundaryColor);
+            }
+        }
+
+        private void TriangulateBoundaryTriangle(
+            Vector3 begin, HexCell beginCell,
+            Vector3 left, HexCell leftCell,
+            Vector3 boundary, Color boundaryColor
+        )
+        {
+            var v2 = HexMetrics.TerraceLerp(begin, left, 1);
+            var c2 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, 1);
+
+            AddTriangle(begin, v2, boundary);
+            AddTriangleColor(beginCell.color, c2, boundaryColor);
+
+            for (int i = 2; i < HexMetrics.terraceSteps; i++)
+            {
+                var v1 = v2;
+                var c1 = c2;
+                v2 = HexMetrics.TerraceLerp(begin, left, i);
+                c2 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, i);
+
+                AddTriangle(v1, v2, boundary);
+                AddTriangleColor(c1, c2, boundaryColor);
+            }
+
+            AddTriangle(v2, left, boundary);
+            AddTriangleColor(c2, leftCell.color, boundaryColor);
         }
 
         private void AddTriangleColor(Color color)
