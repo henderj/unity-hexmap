@@ -13,6 +13,7 @@ namespace hex
 
         public HexCell cellPrefab;
         public TMP_Text cellLabelPrefab;
+        public Texture2D noiseSource;
 
         private HexCell[] _cells;
         private Canvas _gridCanvas;
@@ -20,6 +21,8 @@ namespace hex
 
         private void Awake()
         {
+            HexMetrics.noiseSource = noiseSource;
+
             _gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
             _cells = new HexCell[width * height];
@@ -32,6 +35,8 @@ namespace hex
 
         private void OnEnable()
         {
+            HexMetrics.noiseSource = noiseSource;
+
             foreach (var cell in _cells)
             {
                 if (cell?.uiRect)
@@ -93,6 +98,7 @@ namespace hex
             label.SetText(cell.coordinates.ToStringOnSeparateLines());
 
             cell.uiRect = label.rectTransform;
+            cell.Elevation = 0;
         }
 
 
