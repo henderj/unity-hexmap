@@ -6,15 +6,15 @@ namespace hex
 {
     public class HexGrid : MonoBehaviour
     {
-        public int width = 6;
-        public int height = 6;
-
+        public int chunkCountX = 4, chunkCountZ = 3;
         public Color defaultColor = Color.white;
-
         public HexCell cellPrefab;
         public TMP_Text cellLabelPrefab;
+        public HexGridChunk chunkPrefab;
         public Texture2D noiseSource;
 
+        private int cellCountX, cellCountZ;
+        private HexGridChunk[] _chunks;
         private HexCell[] _cells;
         private Canvas _gridCanvas;
         private HexMesh _hexMesh;
@@ -25,7 +25,10 @@ namespace hex
 
             _gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
-            _cells = new HexCell[width * height];
+            cellCountX = chunkCountX * HexMetrics.chunkSizeX;
+            cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
+            _cells = new HexCell[cellCountX * cellCountZ];
+            CreateCells();
         }
 
         private void Start()
@@ -36,7 +39,25 @@ namespace hex
         private void OnEnable()
         {
             HexMetrics.noiseSource = noiseSource;
+            // CreateCells();
+        }
 
+        private void CreateChunks()
+        {
+            _chunks = new HexGridChunk[chunkCountX * chunkCountZ];
+
+            for (int z = 0, i = 0; z < chunkCountZ; z++)
+            {
+                for (int x = 0; x < chunkCountX; x++)
+                {
+                    var chunk = _chunks[i++] = Instantiate(chunkPrefab);
+                    chunk.transform.SetParent(transform);
+                }
+            }
+        }
+
+        private void CreateCells()
+        {
             foreach (var cell in _cells)
             {
                 if (cell?.uiRect)
@@ -44,11 +65,11 @@ namespace hex
                     Destroy(cell.uiRect.gameObject);
                 }
             }
-            _cells = new HexCell[width * height];
+            _cells = new HexCell[cellCountX * cellCountZ];
 
-            for (int z = 0, i = 0; z < height; z++)
+            for (int z = 0, i = 0; z < cellCountZ; z++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < cellCountX; x++)
                 {
                     CreateCell(x, z, i++);
                 }
@@ -77,18 +98,18 @@ namespace hex
             {
                 if ((z & 1) == 0)
                 {
-                    cell.SetNeighbor(HexDirection.SE, _cells[i - width]);
+                    cell.SetNeighbor(HexDirection.SE, _cells[i - cellCountX]);
                     if (x > 0)
                     {
-                        cell.SetNeighbor(HexDirection.SW, _cells[i - width - 1]);
+                        cell.SetNeighbor(HexDirection.SW, _cells[i - cellCountX - 1]);
                     }
                 }
                 else
                 {
-                    cell.SetNeighbor(HexDirection.SW, _cells[i - width]);
-                    if (x < width - 1)
+                    cell.SetNeighbor(HexDirection.SW, _cells[i - cellCountX]);
+                    if (x < cellCountX - 1)
                     {
-                        cell.SetNeighbor(HexDirection.SE, _cells[i - width + 1]);
+                        cell.SetNeighbor(HexDirection.SE, _cells[i - cellCountX + 1]);
                     }
                 }
             }
@@ -106,7 +127,7 @@ namespace hex
         {
             position = transform.InverseTransformPoint(position);
             var coordinates = HexCoordinates.FromPosition(position);
-            var index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+            var index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
             return _cells[index];
         }
 

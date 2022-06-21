@@ -12,21 +12,23 @@ namespace hex
         public const float OuterRadius = 10f;
         public const float InnerRadius = OuterRadius * 0.866025404f;
 
-        public const float SolidFactor = 0.75f;
+        public const float SolidFactor = 0.8f;
         public const float BlendFactor = 1f - SolidFactor;
 
-        public const float elevationStep = 5f;
+        public const float elevationStep = 3f;
         public const int terracesPerSlope = 2;
         public const int terraceSteps = terracesPerSlope * 2 + 1;
 
         public const float horizontalTerraceStepSize = 1f / terraceSteps;
         public const float verticalTerraceStepSize = 1f / (terracesPerSlope + 1);
 
-        public const float cellPerturbStrength = 5f;
+        public const float cellPerturbStrength = 4f;
         public const float noiseScale = 0.003f;
         public const float elevationPerturbStrength = 1.5f;
 
         public static Texture2D noiseSource;
+
+        public static int chunkSizeX = 5, chunkSizeZ = 5;
 
 
         private static readonly Vector3[] Corners =

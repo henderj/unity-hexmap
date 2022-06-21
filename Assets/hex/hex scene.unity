@@ -724,11 +724,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0fc304bdf10495fad1773be1cab8a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 6
-  height: 6
+  chunkCountX: 4
+  chunkCountZ: 3
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   cellPrefab: {fileID: 5212975276566116724, guid: df04a658039073445aa613f3da32ac26, type: 3}
   cellLabelPrefab: {fileID: 795288157802247771, guid: 82d92c1ba68d9284a8a58d3af2f580c9, type: 3}
+  chunkPrefab: {fileID: 4645589635740880151, guid: d1a83f98df637b2159bbba7dbc207be1, type: 3}
   noiseSource: {fileID: 2800000, guid: 24b05237ddbca85cf81d20a96bac22b0, type: 3}
 --- !u!1 &563668409
 GameObject:
